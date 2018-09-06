@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- @version $Id: applicationContext.xml 561608 2007-08-01 00:33:12Z vgritsenko $ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.tree.*"/>
+    <!--开启AOP自动代理-->
+    <aop:aspectj-autoproxy/>
+
+    <!--定义切面将切面Spring管理-->
+    <bean id="aopXmlAspect" class="com.tree.config.AopXmlConfig"></bean>
+    <aop:config proxy-target-class="true">
+        <!--定义切点-->
+        <aop:pointcut id="pointCut" expression="execution(* com.tree.*.*.*(..))"></aop:pointcut>
+
+        <!--配置通知-->
+        <aop:aspect ref="aopXmlAspect">
+            <!--前置通知-->
+            <aop:before method="beforeMethod" pointcut-ref="pointCut"></aop:before>
+            <!--后置通知-->
+            <aop:after method="afterMethod" pointcut-ref="pointCut"></aop:after>
+        </aop:aspect>
+    </aop:config>
+
+
+
+</beans>
